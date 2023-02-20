@@ -5,21 +5,26 @@
       <h3 class="title">Java1234 Vue3 后台管理系统</h3>
       <el-form-item prop="username">
         <el-input
+            v-model="loginForm.username"
             type="text"
             size="large"
             auto-complete="off"
             placeholder="账号"
         >
+<!--          <template #prefix><svg-icon icon="user" /></template>-->
+<!--          <template><el-icon><Avatar /></el-icon></template>-->
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
         <el-input
+            v-model="loginForm.password"
             type="password"
             size="large"
             auto-complete="off"
             placeholder="密码"
             @keyup.enter="handleLogin"
         >
+<!--          <template #prefix><svg-icon icon="password" /></template>-->
         </el-input>
       </el-form-item>
       <el-checkbox  style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
@@ -42,6 +47,38 @@
 </template>
 
 <script setup>
+import {ref} from 'vue'
+import requestUtil from '@/util/request'
+import store from '@/store'
+import qs from 'qs'
+import {ElMessage} from 'element-plus'
+const loginRef=ref(null)
+const loginForm=ref({
+  username:"",
+  password:""
+})
+
+const loginRules = {
+  username: [{ required: true, trigger: "blur", message: "请输入您的账号" }],
+  password: [{ required: true, trigger: "blur", message: "请输入您的密码" }]
+};
+
+const handleLogin=()=>{
+  loginRef.value.validate(async(valid)=>{
+    if(valid){
+      let result=await requestUtil.post("login?"+qs.stringify(loginForm.value))
+      let data=result.data
+      if(data.code===200){
+        const token=data.authorization
+        store.commit('SET_TOKEN',token)
+      }else{
+        ElMessage.error(data.message)
+      }
+    }else{
+      console.log('验证失败');
+    }
+  })
+}
 
 </script>
 

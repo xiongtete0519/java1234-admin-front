@@ -8,4 +8,24 @@ import '@/assets/styles/reset.css'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 
-createApp(App).use(store).use(router).use(ElementPlus).mount('#app')
+// 一个用户图像+密码锁图标
+// import * as ElementPlusIconsVue from "@element-plus/icons-vue";
+import * as ElIconModules from "@element-plus/icons-vue";
+
+
+// import SvgIcon from '@/icons'
+const app=createApp(App)
+
+// SvgIcon(app);
+// for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+//     app.component(key, component)
+// }
+
+app.use(store).use(router).use(ElementPlus)
+Object.keys(ElIconModules).forEach(function (key) {
+    app.component(ElIconModules[key].name, ElIconModules[key])
+})
+
+app.mount('#app')
+
+
