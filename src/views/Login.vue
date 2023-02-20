@@ -52,6 +52,7 @@ import requestUtil from '@/util/request'
 import store from '@/store'
 import qs from 'qs'
 import {ElMessage} from 'element-plus'
+import router from '@/router'
 const loginRef=ref(null)
 const loginForm=ref({
   username:"",
@@ -70,9 +71,12 @@ const handleLogin=()=>{
       let data=result.data
       if(data.code===200){
         const token=data.authorization
+        console.log('执行前')
         store.commit('SET_TOKEN',token)
+        console.log('执行后')
+        router.replace("/")
       }else{
-        ElMessage.error(data.message)
+        ElMessage.error(data.msg)
       }
     }else{
       console.log('验证失败');

@@ -18,6 +18,7 @@ httpService.interceptors.request.use(function (config) {
     // 在发送请求之前做些什么
     //config.headers.token=window.sessionStorage.getItem('token');
     console.log("store="+store.getters.GET_TOKEN)
+    // console.log("store="+this.$store.getters.GET_TOKEN)
     config.headers.token=store.getters.GET_TOKEN
     return config;
 }, function (error) {
