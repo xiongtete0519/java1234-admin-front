@@ -11,8 +11,7 @@
             auto-complete="off"
             placeholder="账号"
         >
-<!--          <template #prefix><svg-icon icon="user" /></template>-->
-<!--          <template><el-icon><Avatar /></el-icon></template>-->
+          <template #prefix><svg-icon icon="user" /></template>
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
@@ -24,7 +23,7 @@
             placeholder="密码"
             @keyup.enter="handleLogin"
         >
-<!--          <template #prefix><svg-icon icon="password" /></template>-->
+          <template #prefix><svg-icon icon="password" /></template>
         </el-input>
       </el-form-item>
       <el-checkbox  v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
@@ -86,9 +85,10 @@ const handleLogin=()=>{
       let data=result.data
       if(data.code===200){
         const token=data.authorization
-        console.log('执行前')
+        const menuList=data.menuList
+        console.log('menuList='+menuList)
         store.commit('SET_TOKEN',token)
-        console.log('执行后')
+        store.commit('SET_MENULIST',menuList)
         router.replace("/")
       }else{
         ElMessage.error(data.msg)
