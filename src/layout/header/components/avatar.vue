@@ -29,6 +29,7 @@ const squareUrl=ref(getServerUrl()+'image/userAvatar/'+currentUser.value.avatar)
 const logout=async ()=>{
   let result=await requestUtil.get('/logout')
   if(result.data.code===200){
+    store.commit('SET_ROUTES_STATE',false);
     store.dispatch('logout')  //store中action通过dispatch触发
   }
 }

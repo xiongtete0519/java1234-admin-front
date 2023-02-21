@@ -3,10 +3,9 @@
       active-text-color="#ffd04b"
       background-color="#2d3a4b"
       class="el-menu-vertical-demo"
-      default-active="2"
+      default-active="/index"
       text-color="#fff"
-      @open="handleOpen"
-      @close="handleClose"
+      router
   >
     <el-menu-item index="/index">
       <el-icon><home-filled /></el-icon>

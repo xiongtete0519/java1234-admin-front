@@ -4,7 +4,10 @@
       <el-aside width="200px" class="sidebar-container"><Menu/></el-aside>
       <el-container>
         <el-header><Header/></el-header>
-        <el-main><Tabs/></el-main>
+        <el-main>
+          <Tabs/>
+          <router-view/>
+        </el-main>
         <el-footer><Footer/></el-footer>
       </el-container>
     </el-container>
@@ -19,15 +22,6 @@ import Menu from '@/layout/menu'
 import Header from '@/layout/header'
 import Footer from '@/layout/footer'
 import Tabs from '@/layout/tabs'
-// export default {
-//   components:{
-//     Menu,
-//     Header,
-//     Footer,
-//     Tabs
-//   }
-// }
-
 </script>
 
 <style scoped>
