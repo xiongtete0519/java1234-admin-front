@@ -11,10 +11,10 @@ router.beforeEach((to,from,next)=>{
     let menuList=store.getters.GET_MENULIST;
     if(token){
         if(!hasRoutes){
-            console.log('hasRoutes')
+            // console.log('hasRoutes')
             bindRoute(menuList);
             store.commit('SET_ROUTES_STATE',true);
-            console.log('hasRoutes Over')
+            // console.log('hasRoutes Over')
         }
         next();
     }else{
@@ -27,7 +27,7 @@ router.beforeEach((to,from,next)=>{
 });
 //动态绑定路由
 const bindRoute=(menuList)=>{
-    console.log('动态路由中menuList:',menuList)
+    // console.log('动态路由中menuList:',menuList)
     let newRoutes=router.options.routes;
     menuList.forEach(menu=>{
         if(menu.children){
