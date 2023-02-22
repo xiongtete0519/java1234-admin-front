@@ -36,7 +36,7 @@
       <el-table-column prop="action" label="操作" width="200" fixed="right" align="center">
         <template v-slot="scope" >
           <el-button  type="primary" :icon="Tools" >分配角色</el-button>
-          <el-button v-if="scope.row.username!=='java1234'" type="primary" :icon="Edit" @click="handleDialogValue(scope.row.id)" />
+          <el-button v-if="scope.row.username!=='admin'" type="primary" :icon="Edit" @click="handleDialogValue(scope.row.id)" />
         </template>
       </el-table-column>
     </el-table>

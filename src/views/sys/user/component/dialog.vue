@@ -125,9 +125,9 @@ watch(
     ()=>{
       let id=props.id;
       console.log("id="+id)
-      if(id!==-1){
+      if(id!==-1){  //穿了id,修改用户
         initFormData(id);
-      }else{
+      }else{  //新增用户
         form.value={
           id:-1,
           username:"",
