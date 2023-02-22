@@ -10,7 +10,7 @@
         </template>
         <div>
           <div class="text-center">
-            <avatar/>
+            <avatar :user="currentUser"/>
           </div>
           <ul class="list-group list-group-striped">
             <li class="list-group-item">
@@ -49,7 +49,7 @@
             <userInfo :user="currentUser"/>
           </el-tab-pane>
           <el-tab-pane label="修改密码" name="resetPwd">
-            <resetPwd/>
+            <resetPwd :user="currentUser"/>
           </el-tab-pane>
         </el-tabs>
       </el-card>
