@@ -89,6 +89,22 @@ const handleDialogValue=(menuId)=>{
   dialogVisible.value=true
 }
 
+const handleDelete=async (id)=>{
+
+  const res=await requestUtil.get("sys/menu/delete/"+id)
+  if(res.data.code===200){
+    ElMessage({
+      type: 'success',
+      message: '执行成功!'
+    })
+    initMenuList();
+  }else{
+    ElMessage({
+      type: 'error',
+      message: res.data.msg,
+    })
+  }
+}
 
 </script>
 
