@@ -1,7 +1,7 @@
 <template>
   <el-dialog
-      model-value="roleDialogVisible"
-      title="分配角色"
+      model-value="menuDialogVisible"
+      title="分配权限"
       width="30%"
       @close="handleClose"
   >
@@ -11,10 +11,15 @@
         :model="form"
         label-width="100px"
     >
-      <el-checkbox-group v-model="form.checkedRoles">
-        <el-checkbox v-for="role in form.roleList" :id="role.id" :key="role.id" :label="role.id"  name="checkedRoles" >{{role.name}}</el-checkbox>
-      </el-checkbox-group>
-
+      <el-tree
+          ref="treeRef"
+          :data="treeData"
+          :props="defaultProps"
+          show-checkbox
+          :default-expand-all=true
+          node-key="id"
+          :check-strictly=true
+      />
     </el-form>
 
     <template #footer>
@@ -31,6 +36,12 @@
 import {defineEmits, defineProps, ref, watch} from "vue";
 import requestUtil,{getServerUrl} from "@/util/request";
 import { ElMessage } from 'element-plus'
+const treeData=ref([])
+
+const defaultProps = {
+  children: 'children',
+  label: 'name'
+}
 
 //从父组件传过来的值
 const props=defineProps(
@@ -40,14 +51,9 @@ const props=defineProps(
         default:-1,
         required:true
       },
-      roleDialogVisible:{
+      menuDialogVisible:{
         type:Boolean,
         default:false,
-        required:true
-      },
-      sysRoleList:{
-        type:Array,
-        default:[],
         required:true
       }
     }
@@ -55,38 +61,32 @@ const props=defineProps(
 
 
 const form=ref({
-  id:-1,
-  roleList:[],
-  checkedRoles:[]
+  id:-1
 })
 
 
 const formRef=ref(null)
 
 const initFormData=async(id)=>{
-  const res=await requestUtil.get("sys/role/listAll");
-  form.value.roleList=res.data.roleList;
+  const res=await requestUtil.get("sys/menu/treeList");
+  treeData.value=res.data.treeMenu
   form.value.id=id;
 }
 
 
 watch(
-    ()=>props.roleDialogVisible,
+    ()=>props.menuDialogVisible,
     ()=>{
       let id=props.id;
       console.log("id="+id)
       if(id!==-1){
-        form.value.checkedRoles=[]
-        props.sysRoleList.forEach(item=>{ //遍历父页面传来的角色列表
-          form.value.checkedRoles.push(item.id);  //设置默认选中的角色
-        })
         initFormData(id)
       }
     }
 )
 
 
-const emits=defineEmits(['update:modelValue','initUserList'])
+const emits=defineEmits(['update:modelValue','initRoleList'])
 
 const handleClose=()=>{
   emits('update:modelValue',false)

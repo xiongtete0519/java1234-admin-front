@@ -22,7 +22,7 @@
       <el-table-column prop="remark" label="备注"  />
       <el-table-column prop="action" label="操作" width="200" fixed="right" align="center">
         <template v-slot="scope" >
-          <el-button  type="primary" :icon="Tools" @click="handleRoleDialogValue(scope.row.id,scope.row.sysRoleList)">分配权限</el-button>
+          <el-button  type="primary" :icon="Tools" @click="handleMenuDialogValue(scope.row.id)">分配权限</el-button>
           <el-button v-if="scope.row.code!=='admin'" type="primary" :icon="Edit" @click="handleDialogValue(scope.row.id)" />
           <el-popconfirm v-if="scope.row.rolename!=='admin'" title="您确定要删除这条记录吗？" @confirm="handleDelete(scope.row.id)">
             <template #reference>
@@ -44,7 +44,7 @@
   </div>
 
   <Dialog v-model="dialogVisible" :dialogVisible="dialogVisible" :id="id" :dialogTitle="dialogTitle" @initRoleList="initRoleList"/>
-  <RoleDialog v-model="roleDialogVisible" :sysRoleList="sysRoleList" :roleDialogVisible="roleDialogVisible" :id="id" @initRoleList="initRoleList"></RoleDialog>
+  <MenuDialog v-model="menuDialogVisible" :menuDialogVisible="menuDialogVisible" :id="id" @initRoleList="initRoleList"></MenuDialog>
 </template>
 
 <script setup>
@@ -53,8 +53,7 @@ import requestUtil,{getServerUrl} from "@/util/request";
 import { ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import Dialog from '@/views/sys/role/component/dialog'
-import RoleDialog from '@/views/sys/role/component/roleDialog'
-
+import MenuDialog from '@/views/sys/role/component/menuDialog'
 const tableData=ref([]);
 
 const total=ref(0)
@@ -71,7 +70,7 @@ const dialogTitle=ref("")
 const id=ref(-1)
 // RoleDialog的两个值
 const sysRoleList=ref([])
-const roleDialogVisible=ref(false)
+const menuDialogVisible=ref(false)
 
 const delBtnStatus=ref(true)
 //复选框选中事件
@@ -172,11 +171,10 @@ const statusChangeHandle=async (row)=>{
 }
 
 //分配角色触发
-const handleRoleDialogValue=(roleId,roleList)=>{
+const handleMenuDialogValue=(roleId)=>{
   console.log("roleId="+roleId)
   id.value=roleId;
-  sysRoleList.value=roleList;
-  roleDialogVisible.value=true  //显示
+  menuDialogVisible.value=true  //显示
 }
 </script>
 
