@@ -91,7 +91,9 @@ const handleLogin=()=>{
         store.commit('SET_TOKEN',token)
         store.commit('SET_MENULIST',menuList)
         store.commit('SET_USERINFO',currentUser)
-        router.replace("/")
+        // router.replace("/")
+        router.push({path:'/'})
+        // console.log(' router.replace("/")执行完毕')
       }else{
         ElMessage.error(data.msg)
       }

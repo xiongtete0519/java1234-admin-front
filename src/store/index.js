@@ -63,6 +63,7 @@ export default createStore({
         //安全退出
         logout() {
             window.sessionStorage.clear();
+            console.log('触发清空sessionStorage')
             router.replace('/login')
         }
     },
