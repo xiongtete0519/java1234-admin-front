@@ -1,64 +1,79 @@
 <template>
-
   <el-dialog
       model-value="dialogVisible"
       :title="dialogTitle"
       width="30%"
       @close="handleClose"
   >
+
     <el-form
         ref="formRef"
         :model="form"
         :rules="rules"
         label-width="100px"
     >
-      <el-form-item label="用户名" prop="username">
-        <el-input v-model="form.username" :disabled="form.id===-1?false:'disabled'"  />
-        <el-alert
-            v-if="form.id===-1"
-            title="默认初始密码：123456"
-            :closable="false"
-            style="line-height: 10px;"
-            type="success" >
-        </el-alert>
+
+      <el-form-item label="上级菜单" prop="parentId">
+        <el-select v-model="form.parentId" placeholder="请选择上级菜单">
+          <template v-for="item in tableData">
+            <el-option :label="item.name" :value="item.id"></el-option>
+            <template v-for="child in item.children">
+              <el-option :label="child.name" :value="child.id">
+                <span>{{ "    -- " + child.name }}</span>
+              </el-option>
+            </template>
+          </template>
+        </el-select>
       </el-form-item>
 
-      <el-form-item label="手机号" prop="phonenumber">
-        <el-input v-model="form.phonenumber" />
-      </el-form-item>
-
-      <el-form-item label="邮箱" prop="email">
-        <el-input v-model="form.email" />
-      </el-form-item>
-
-      <el-form-item label="状态" prop="status">
-        <el-radio-group v-model="form.status">
-          <el-radio :label="'0'">正常</el-radio>
-          <el-radio :label="'1'">禁用</el-radio>
+      <el-form-item label="菜单类型" prop="menuType" label-width="100px">
+        <el-radio-group v-model="form.menuType">
+          <el-radio :label="'M'">目录</el-radio>
+          <el-radio :label="'C'">菜单</el-radio>
+          <el-radio :label="'F'">按钮</el-radio>
         </el-radio-group>
       </el-form-item>
 
-
-      <el-form-item label="备注" prop="remark">
-        <el-input v-model="form.remark" type="textarea" :rows="4"/>
+      <el-form-item label="菜单图标" prop="icon">
+        <el-input v-model="form.icon" />
       </el-form-item>
+
+      <el-form-item label="菜单名称" prop="name">
+        <el-input v-model="form.name" />
+      </el-form-item>
+
+      <el-form-item label="权限标识" prop="perms">
+        <el-input v-model="form.perms" />
+      </el-form-item>
+
+      <el-form-item label="组件路径" prop="component">
+        <el-input v-model="form.component" />
+      </el-form-item>
+
+      <el-form-item label="显示顺序" prop="orderNum" >
+        <el-input-number v-model="form.orderNum" :min="1" label="显示顺序"></el-input-number>
+      </el-form-item>
+
 
 
     </el-form>
     <template #footer>
       <span class="dialog-footer">
         <el-button type="primary" @click="handleConfirm">确认</el-button>
-        <el-button @click="handleClose">取消</el-button>
+        <el-button  @click="handleClose">取消</el-button>
       </span>
     </template>
   </el-dialog>
-
 </template>
 
 <script setup>
-import {defineEmits, defineProps,ref,watch } from "vue"
+
+import {defineEmits, defineProps, ref, watch} from "vue";
 import requestUtil,{getServerUrl} from "@/util/request";
 import { ElMessage } from 'element-plus'
+
+const tableData=ref([])
+
 
 const props=defineProps(
     {
@@ -76,86 +91,79 @@ const props=defineProps(
         type:Boolean,
         default:false,
         required:true
+      },
+      tableData:{
+        type:Array,
+        default:[],
+        required:true
       }
     }
 )
 
+
 const form=ref({
   id:-1,
-  username:"",
-  password:"123456",
-  status:"0",
-  phonenumber:"",
-  email:"",
-  remark:""
+  parentId:'',
+  menuType:"M",
+  icon:'',
+  name:'',
+  perms:'',
+  component:'',
+  orderNum:1
 })
-//校验用户名是否已经存在
-const checkUsername = async (rule, value, callback) => {
-  if(form.value.id===-1){
-    const res=await requestUtil.post("sys/user/checkUserName",{username:form.value.username});
-    if (res.data.code===500) {
-      callback(new Error("用户名已存在！"));
-    } else {
-      callback();
-    }
-  }else{
-    callback();
-  }
-}
 
 
 const rules=ref({
-  username:[
-    { required: true, message: '请输入用户名'},
-    { required: true, validator: checkUsername, trigger: "blur" }
+  parentId:[
+    { required: true, message: '请选择上级菜单'}
   ],
-  email: [{ required: true, message: "邮箱地址不能为空", trigger: "blur" }, { type: "email", message: "请输入正确的邮箱地址", trigger: ["blur", "change"] }],
-  phonenumber: [{ required: true, message: "手机号码不能为空", trigger: "blur" }, { pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/, message: "请输入正确的手机号码", trigger: "blur" }],
+  name: [{ required: true, message: "菜单名称不能为空", trigger: "blur" }]
 })
 
 const formRef=ref(null)
 
 const initFormData=async(id)=>{
-  const res=await requestUtil.get("sys/user/"+id);  //根据id查询数据
-  form.value=res.data.sysUser;
+  const res=await requestUtil.get("sys/menu/"+id);
+  form.value=res.data.sysMenu;
 }
 
 watch(
     ()=>props.dialogVisible,
     ()=>{
       let id=props.id;
-      console.log("id="+id)
-      if(id!==-1){  //穿了id,修改用户
-        initFormData(id);
-      }else{  //新增用户
+      tableData.value=props.tableData;
+      if(id!==-1){
+        initFormData(id)
+      }else{
         form.value={
           id:-1,
-          username:"",
-          password:"123456",
-          status:"0",
-          phonenumber:"",
-          email:"",
-          remark:""
+          parentId:'',
+          menuType:"M",
+          icon:'',
+          name:'',
+          perms:'',
+          component:'',
+          orderNum:1
         }
       }
     }
 )
-//定义父组件的方法
-const emits=defineEmits(['update:modelValue','initUserList'])
+
+const emits=defineEmits(['update:modelValue','initMenuList'])
 
 const handleClose=()=>{
   emits('update:modelValue',false)
 }
-//表单提交
+
 const handleConfirm=()=>{
   formRef.value.validate(async(valid)=>{
     if(valid){
-      let result=await requestUtil.post("sys/user/save",form.value);
+      let result=await requestUtil.post("sys/menu/save",form.value);
       let data=result.data;
       if(data.code===200){
         ElMessage.success("执行成功！")
         formRef.value.resetFields();
-        emits("initUserList")
+        emits("initMenuList")
         handleClose();
       }else{
         ElMessage.error(data.msg);
@@ -168,6 +176,6 @@ const handleConfirm=()=>{
 
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 
 </style>

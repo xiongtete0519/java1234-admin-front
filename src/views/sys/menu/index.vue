@@ -45,7 +45,7 @@
     </el-table>
   </div>
 
-  <Dialog v-model="dialogVisible" :dialogVisible="dialogVisible" :id="id" :dialogTitle="dialogTitle" @initMenuList="initMenuList"/>
+  <Dialog v-model="dialogVisible" :tableData="tableData" :dialogVisible="dialogVisible" :id="id" :dialogTitle="dialogTitle" @initMenuList="initMenuList"/>
 </template>
 
 <script setup>
@@ -81,10 +81,10 @@ initMenuList();
 const handleDialogValue=(menuId)=>{
   if(menuId){
     id.value=menuId;
-    dialogTitle.value="用户修改"
+    dialogTitle.value="菜单修改"
   }else{  //新增的时候没有传id
     id.value=-1;
-    dialogTitle.value="用户添加"
+    dialogTitle.value="菜单添加"
   }
   dialogVisible.value=true
 }
