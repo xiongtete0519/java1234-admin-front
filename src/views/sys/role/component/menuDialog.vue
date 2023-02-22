@@ -36,6 +36,7 @@
 import {defineEmits, defineProps, ref, watch} from "vue";
 import requestUtil,{getServerUrl} from "@/util/request";
 import { ElMessage } from 'element-plus'
+const treeRef=ref(null)
 const treeData=ref([])
 
 const defaultProps = {
@@ -71,6 +72,8 @@ const initFormData=async(id)=>{
   const res=await requestUtil.get("sys/menu/treeList");
   treeData.value=res.data.treeMenu
   form.value.id=id;
+  const res2=await requestUtil.get("sys/role/menus/"+id);
+  treeRef.value.setCheckedKeys(res2.data.menuIdList);//设置选中的节点
 }
 
 
@@ -95,12 +98,12 @@ const handleClose=()=>{
 const handleConfirm=()=>{
   formRef.value.validate(async(valid)=>{
     if(valid){
-      let result=await requestUtil.post("sys/user/grantRole/"+form.value.id,form.value.checkedRoles);
+      var menuIds=treeRef.value.getCheckedKeys();//获取选中的节点
+      let result=await requestUtil.post("sys/role/updateMenus/"+form.value.id,menuIds);
       let data=result.data;
       if(data.code===200){
         ElMessage.success("执行成功！")
-
-        emits("initUserList")
+        emits("initRoleList")
         handleClose();
       }else{
         ElMessage.error(data.msg);
