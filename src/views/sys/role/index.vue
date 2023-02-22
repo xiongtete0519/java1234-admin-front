@@ -20,7 +20,7 @@
       <el-table-column prop="code" label="权限字符" width="200" align="center"/>
       <el-table-column prop="createTime" label="创建时间" width="200" align="center"/>
       <el-table-column prop="remark" label="备注"  />
-      <el-table-column prop="action" label="操作" width="200" fixed="right" align="center">
+      <el-table-column prop="action" label="操作" width="400" fixed="right" align="center">
         <template v-slot="scope" >
           <el-button  type="primary" :icon="Tools" @click="handleMenuDialogValue(scope.row.id)">分配权限</el-button>
           <el-button v-if="scope.row.code!=='admin'" type="primary" :icon="Edit" @click="handleDialogValue(scope.row.id)" />

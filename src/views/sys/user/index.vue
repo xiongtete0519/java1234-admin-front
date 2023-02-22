@@ -38,7 +38,7 @@
       <el-table-column prop="createTime" label="创建时间" width="200" align="center"/>
       <el-table-column prop="loginDate" label="最后登录时间" width="200" align="center"/>
       <el-table-column prop="remark" label="备注"  />
-      <el-table-column prop="action" label="操作" width="200" fixed="right" align="center">
+      <el-table-column prop="action" label="操作" width="400" fixed="right" align="center">
         <template v-slot="scope" >
           <el-button  type="primary" :icon="Tools" @click="handleRoleDialogValue(scope.row.id,scope.row.sysRoleList)">分配角色</el-button>
           <el-button v-if="scope.row.username!=='admin'" type="primary" :icon="Edit" @click="handleDialogValue(scope.row.id)" />
