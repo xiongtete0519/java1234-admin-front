@@ -19,5 +19,5 @@ npm run build
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## 进入JWT前后端交互
-![](http://blog.codeleader.top/img/20230221194439.png)
+![](https://img-blog.csdnimg.cn/img_convert/d2ba7c028b0753e5da7fdcf0a1f68324.png)
 
