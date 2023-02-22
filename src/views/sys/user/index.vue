@@ -40,7 +40,7 @@
       <el-table-column prop="remark" label="备注"  />
       <el-table-column prop="action" label="操作" width="200" fixed="right" align="center">
         <template v-slot="scope" >
-          <el-button  type="primary" :icon="Tools" >分配角色</el-button>
+          <el-button  type="primary" :icon="Tools" @click="handleRoleDialogValue(scope.row.id,scope.row.sysRoleList)">分配角色</el-button>
           <el-button v-if="scope.row.username!=='admin'" type="primary" :icon="Edit" @click="handleDialogValue(scope.row.id)" />
           <el-popconfirm v-if="scope.row.username!=='admin'" title="您确定要删除这条记录吗？" @confirm="handleDelete(scope.row.id)">
             <template #reference>
@@ -67,14 +67,17 @@
   </div>
 
   <Dialog v-model="dialogVisible" :dialogVisible="dialogVisible" :id="id" :dialogTitle="dialogTitle" @initUserList="initUserList"/>
+  <RoleDialog v-model="roleDialogVisible" :sysRoleList="sysRoleList" :roleDialogVisible="roleDialogVisible" :id="id" @initUserList="initUserList"></RoleDialog>
 </template>
 
 <script setup>
 import { Search ,Delete,DocumentAdd ,Edit, Tools, RefreshRight} from '@element-plus/icons-vue'
 import requestUtil,{getServerUrl} from "@/util/request";
 import { ref } from 'vue'
-import Dialog from '@/views/sys/user/component/dialog'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import Dialog from '@/views/sys/user/component/dialog'
+import RoleDialog from '@/views/sys/user/component/ roleDialog'
+
 const tableData=ref([]);
 
 const total=ref(0)
@@ -89,6 +92,9 @@ const queryForm=ref({
 const dialogVisible=ref(false)
 const dialogTitle=ref("")
 const id=ref(-1)
+// RoleDialog的两个值
+const sysRoleList=ref([])
+const roleDialogVisible=ref(false)
 
 const delBtnStatus=ref(true)
 //复选框选中事件
@@ -186,6 +192,14 @@ const statusChangeHandle=async (row)=>{
     })
     initUserList();
   }
+}
+
+//分配角色触发
+const handleRoleDialogValue=(userId,roleList)=>{
+  console.log("userId="+userId)
+  id.value=userId;
+  sysRoleList.value=roleList;
+  roleDialogVisible.value=true  //显示
 }
 </script>
 
