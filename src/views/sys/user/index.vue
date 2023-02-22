@@ -1,8 +1,43 @@
 <template>
   <div class="app-container">
 
+    <el-row :gutter="20" class="header">
+      <el-col :span="7">
+        <el-input placeholder="请输入用户名..." v-model="queryForm.query" clearable ></el-input>
+      </el-col>
+      <el-button type="primary" :icon="Search" @click="initUserList">搜索</el-button>
+    </el-row>
+
     <el-table :data="tableData" stripe style="width: 100%">
-      <el-table-column prop="username" label="用户名" width="180" />
+      <el-table-column type="selection" width="55" />
+      <el-table-column prop="avatar" label="头像" width="80" align="center">
+        <template v-slot="scope">
+          <img :src="getServerUrl()+'image/userAvatar/'+scope.row.avatar" width="50" height="50"/>
+        </template>
+      </el-table-column>
+      <el-table-column prop="username" label="用户名"  width="100" align="center"/>
+      <el-table-column prop="roles" label="拥有角色" width="200" align="center">
+        <template v-slot="scope">
+          <el-tag size="small" type="warning" v-for="item in scope.row.sysRoleList">   {{item.name}}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="email" label="邮箱" width="200" align="center"/>
+      <el-table-column prop="phonenumber" label="手机号" width="120" align="center"/>
+      <el-table-column prop="status" label="状态？" width="200" align="center" >
+        <template v-slot="{row}" >
+          <el-switch  v-model="row.status" @change="statusChangeHandle(row)" active-text="正常"
+                      inactive-text="禁用" active-value="0" inactive-value="1"></el-switch>
+        </template>
+      </el-table-column>
+      <el-table-column prop="createTime" label="创建时间" width="200" align="center"/>
+      <el-table-column prop="loginDate" label="最后登录时间" width="200" align="center"/>
+      <el-table-column prop="remark" label="备注"  />
+      <el-table-column prop="action" label="操作" width="200" fixed="right" align="center">
+        <template v-slot="scope" >
+          <el-button  type="primary" :icon="Tools" >分配角色</el-button>
+
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination
         v-model:currentPage="queryForm.pageNum"
@@ -17,11 +52,14 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import { Search ,Delete,DocumentAdd ,Edit, Tools, RefreshRight} from '@element-plus/icons-vue'
 import requestUtil,{getServerUrl} from "@/util/request";
+import { ref } from 'vue'
 
-const tableData=ref({})
+const tableData=ref([]);
+
 const total=ref(0)
+
 const queryForm=ref({
   query:'',
   pageNum:1,
@@ -29,23 +67,24 @@ const queryForm=ref({
 })
 
 const initUserList=async()=>{
-  const res=await requestUtil.post('sys/user/list',queryForm.value);
+  const res=await requestUtil.post("sys/user/list",queryForm.value);
   tableData.value=res.data.userList;
   total.value=res.data.total;
 }
+
 initUserList();
 
-//改变当前页
 const handleSizeChange=(pageSize)=>{
   queryForm.value.pageNum=1;
-  queryForm.value.pageSize=pageSize
-  initUserList();
+  queryForm.value.pageSize=pageSize;
+  initUserList()
 }
-//改变每页记录数
+
 const handleCurrentChange=(pageNum)=>{
   queryForm.value.pageNum=pageNum;
-  initUserList();
+  initUserList()
 }
+
 </script>
 
 <style lang="scss" scoped>
