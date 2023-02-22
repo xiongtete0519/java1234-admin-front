@@ -6,6 +6,7 @@
         <el-input placeholder="请输入用户名..." v-model="queryForm.query" clearable ></el-input>
       </el-col>
       <el-button type="primary" :icon="Search" @click="initUserList">搜索</el-button>
+      <el-button type="success" :icon="DocumentAdd" @click="handleDialogValue()">新增</el-button>
     </el-row>
 
     <el-table :data="tableData" stripe style="width: 100%">
@@ -35,7 +36,7 @@
       <el-table-column prop="action" label="操作" width="200" fixed="right" align="center">
         <template v-slot="scope" >
           <el-button  type="primary" :icon="Tools" >分配角色</el-button>
-
+          <el-button v-if="scope.row.username!=='java1234'" type="primary" :icon="Edit" @click="handleDialogValue(scope.row.id)" />
         </template>
       </el-table-column>
     </el-table>
@@ -49,12 +50,15 @@
         @current-change="handleCurrentChange"
     />
   </div>
+
+  <Dialog v-model="dialogVisible" :dialogVisible="dialogVisible" :id="id" :dialogTitle="dialogTitle" @initUserList="initUserList"/>
 </template>
 
 <script setup>
 import { Search ,Delete,DocumentAdd ,Edit, Tools, RefreshRight} from '@element-plus/icons-vue'
 import requestUtil,{getServerUrl} from "@/util/request";
 import { ref } from 'vue'
+import Dialog from '@/views/sys/user/component/dialog'
 
 const tableData=ref([]);
 
@@ -65,6 +69,11 @@ const queryForm=ref({
   pageNum:1,
   pageSize:10
 })
+
+//Dialog组件的三个值
+const dialogVisible=ref(false)
+const dialogTitle=ref("")
+const id=ref(-1)
 
 const initUserList=async()=>{
   const res=await requestUtil.post("sys/user/list",queryForm.value);
@@ -84,7 +93,17 @@ const handleCurrentChange=(pageNum)=>{
   queryForm.value.pageNum=pageNum;
   initUserList()
 }
-
+//用户修改或者添加对话框
+const handleDialogValue=(userId)=>{
+  if(userId){
+    id.value=userId;
+    dialogTitle.value="用户修改"
+  }else{
+    id.value=-1;
+    dialogTitle.value="用户添加"
+  }
+  dialogVisible.value=true
+}
 </script>
 
 <style lang="scss" scoped>
