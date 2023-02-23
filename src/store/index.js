@@ -6,6 +6,7 @@ export default createStore({
         token: '', //token
         menuList: '',//菜单列表
         userInfo: '',  //用户信息
+        perms:'',//权限字符列表
         hasRoutes: false,  //路由是否动态加载
         editableTabsValue: '/index', //选中的tabs
         editableTabs: [ //所有的tabs
@@ -24,7 +25,11 @@ export default createStore({
         },
         GET_USERINFO: state => {
             return JSON.parse(sessionStorage.getItem("userInfo"))
+        },
+        GET_PERMS: state=>{
+            return JSON.parse(sessionStorage.getItem('perms'))
         }
+
     },
     mutations: {
         SET_TOKEN: (state, token) => {
@@ -38,6 +43,9 @@ export default createStore({
         },
         SET_ROUTES_STATE: (state, hasRoutes) => {
             state.hasRoutes = hasRoutes
+        },
+        SET_PERMS:(state,perms)=>{
+          sessionStorage.setItem("perms",JSON.stringify(perms));
         },
         ADD_TABS: (state, tab) => {
             if (state.editableTabs.findIndex(e => e.name === tab.path) === -1) {  //没找到

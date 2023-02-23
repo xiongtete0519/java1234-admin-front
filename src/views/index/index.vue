@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    欢迎使用，Java1234 通用权限系统 ！
+    Write once,run anywhere
   </div>
 
 </template>

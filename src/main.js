@@ -13,9 +13,12 @@ import zhCn from 'element-plus/es/locale/lang/zh-cn'
 
 import '@/router/permission'
 
+import {myFunc} from "@/sys/mixinFunc";
 
 import SvgIcon from '@/icons'
 const app=createApp(App)
+
+app.mixin(myFunc)
 
 SvgIcon(app);
 app.use(store).use(router)

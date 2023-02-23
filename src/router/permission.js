@@ -11,16 +11,19 @@ router.beforeEach((to,from,next)=>{
     let menuList=store.getters.GET_MENULIST;
     if(token){
         if(!hasRoutes){
-            // console.log('hasRoutes')
+            console.log('hasRoutes')
             bindRoute(menuList);
             store.commit('SET_ROUTES_STATE',true);
-            // console.log('hasRoutes Over')
+            console.log('hasRoutes Over')
         }
         next();
     }else{
+        console.log('else')
         if(whiteList.includes(to.path)){    //如果在白名单里，放行
+            console.log('白名单放行')
             next();
         }else{
+            console.log('重定向到/login')
             next('/login');
         }
     }

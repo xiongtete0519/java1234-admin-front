@@ -40,8 +40,8 @@
       <el-table-column prop="remark" label="备注"  />
       <el-table-column prop="action" label="操作" width="400" fixed="right" align="center">
         <template v-slot="scope" >
-          <el-button  type="primary" :icon="Tools" @click="handleRoleDialogValue(scope.row.id,scope.row.sysRoleList)">分配角色</el-button>
-          <el-button v-if="scope.row.username!=='admin'" type="primary" :icon="Edit" @click="handleDialogValue(scope.row.id)" />
+          <el-button  type="primary" :icon="Tools" @click="handleRoleDialogValue(scope.row.id,scope.row.sysRoleList)" v-if="hasAuth('system:user:role')">分配角色</el-button>
+          <el-button v-if="scope.row.username!=='admin' && hasAuth('system:user:edit')" type="primary" :icon="Edit" @click="handleDialogValue(scope.row.id)" />
           <el-popconfirm v-if="scope.row.username!=='admin'" title="您确定要删除这条记录吗？" @confirm="handleDelete(scope.row.id)">
             <template #reference>
               <el-button  type="danger" :icon="Delete" />
