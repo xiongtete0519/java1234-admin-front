@@ -26,6 +26,21 @@
           <template #prefix><svg-icon icon="password" /></template>
         </el-input>
       </el-form-item>
+      <el-form-item prop="code">
+        <el-input
+            v-model="loginForm.code"
+            size="large"
+            auto-complete="off"
+            placeholder="验证码"
+            style="width: 63%"
+            @keyup.enter="handleLogin"
+        >
+          <template #prefix><svg-icon icon="validCode" /></template>
+        </el-input>
+        <div class="login-code">
+          <img :src="codeUrl" @click="getCode" class="login-code-img"/>
+        </div>
+      </el-form-item>
       <el-checkbox  v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
       <el-form-item style="width:100%;">
         <el-button
@@ -55,16 +70,28 @@ import router from '@/router'
 import Cookies from "js-cookie";
 import { encrypt, decrypt } from "@/util/jsencrypt";
 const loginRef=ref(null)
+const codeUrl=ref('')
+
 const loginForm=ref({
   username:"",
   password:"",
-  rememberMe:false
+  rememberMe:false,
+  code:'',
+  uuid:''
 })
 
 const loginRules = {
   username: [{ required: true, trigger: "blur", message: "请输入您的账号" }],
-  password: [{ required: true, trigger: "blur", message: "请输入您的密码" }]
+  password: [{ required: true, trigger: "blur", message: "请输入您的密码" }],
+  code:[{required:true,trigger:'blur',message:'请输入验证码'}]
 };
+
+const getCode=async ()=>{
+  let result=await requestUtil.get('/captcha');
+  console.log(result)
+  loginForm.value.uuid=result.data.uuid;
+  codeUrl.value=result.data.base64Img;
+}
 
 const handleLogin=()=>{
   loginRef.value.validate(async(valid)=>{
@@ -115,6 +142,7 @@ function getCookie() {
   };
 }
 
+getCode();
 getCookie();
 </script>
 
