@@ -3,8 +3,9 @@ import router from '@/router'
 
 export default createStore({
     state: {
-        token: '', //token
-        menuList: '',//菜单列表
+        token: window.sessionStorage.getItem('token'),  //token
+        menuList: window.sessionStorage.getItem("menuList"),//菜单列表
+        // menuList: '',//菜单列表
         userInfo: '',  //用户信息
         perms:'',//权限字符列表
         hasRoutes: false,  //路由是否动态加载
@@ -18,12 +19,14 @@ export default createStore({
     },
     getters: {
         GET_TOKEN: state => {
-            let token=state.token
-            return window.sessionStorage.getItem('token');
+            // let token=state.token
+            // return window.sessionStorage.getItem('token');
+            return state.token;
         },
         GET_MENULIST: state => {
-            let menuList=state.menuList
-            return JSON.parse(window.sessionStorage.getItem("menuList"))
+            // let menuList=state.menuList
+            // return JSON.parse(window.sessionStorage.getItem("menuList"))
+            return JSON.parse(state.menuList);
         },
         GET_USERINFO: state => {
             let userInfo=state.userInfo
@@ -42,7 +45,7 @@ export default createStore({
         },
         SET_MENULIST: (state, menuList) => {
             state.menuList=JSON.stringify(menuList)
-            sessionStorage.setItem("menuList", JSON.stringify(menuList))
+            window.sessionStorage.setItem("menuList", JSON.stringify(menuList))
         },
         SET_USERINFO: (state, userInfo) => {
             sessionStorage.setItem("userInfo", JSON.stringify(userInfo))
