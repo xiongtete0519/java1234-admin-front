@@ -18,24 +18,30 @@ export default createStore({
     },
     getters: {
         GET_TOKEN: state => {
-            return sessionStorage.getItem("token")
+            let token=state.token
+            return window.sessionStorage.getItem('token');
         },
         GET_MENULIST: state => {
-            return JSON.parse(sessionStorage.getItem("menuList"))
+            let menuList=state.menuList
+            return JSON.parse(window.sessionStorage.getItem("menuList"))
         },
         GET_USERINFO: state => {
+            let userInfo=state.userInfo
             return JSON.parse(sessionStorage.getItem("userInfo"))
         },
         GET_PERMS: state=>{
+            let perms=state.perms
             return JSON.parse(sessionStorage.getItem('perms'))
         }
 
     },
     mutations: {
         SET_TOKEN: (state, token) => {
-            sessionStorage.setItem("token", token)
+            state.token=token
+            window.sessionStorage.setItem("token", token)
         },
         SET_MENULIST: (state, menuList) => {
+            state.menuList=JSON.stringify(menuList)
             sessionStorage.setItem("menuList", JSON.stringify(menuList))
         },
         SET_USERINFO: (state, userInfo) => {

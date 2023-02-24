@@ -7,8 +7,15 @@ router.beforeEach((to,from,next)=>{
         '/login'
     ]
     let token=store.getters.GET_TOKEN;
+    // let token=sessionStorage.getItem('token')
     let hasRoutes=store.state.hasRoutes;
     let menuList=store.getters.GET_MENULIST;
+    console.log(menuList)
+    // let menuList=JSON.parse(sessionStorage.getItem('menuList'));
+    // console.log('想要去的路由:'+to.path)
+    // console.log('此时的token是否为空',token!=='')
+    // console.log('此时的token值:',token)
+    // console.log('SessionStorage中的token',sessionStorage.getItem('token'))
     if(token){
         if(!hasRoutes){
             console.log('hasRoutes')

@@ -107,22 +107,31 @@ const handleLogin=()=>{
         Cookies.remove("password");
         Cookies.remove("rememberMe");
       }
-
+      console.log('请求login')
       let result=await requestUtil.post("login?"+qs.stringify(loginForm.value))
+      console.log('请求login结束')
       let data=result.data
       if(data.code===200){
         const token=data.authorization
         const menuList=data.menuList
         const currentUser=data.currentUser
         const perms=data.perms
+        console.log('准备设置的token:'+token)
         console.log('menuList='+menuList)
+        // this.$store.commit('SET_TOKEN',token)
         store.commit('SET_TOKEN',token)
+        console.log('token是否设置成功:'+store.getters.GET_TOKEN);
+        // debugger
         store.commit('SET_MENULIST',menuList)
+        // debugger
         store.commit('SET_USERINFO',currentUser)
         store.commit('SET_PERMS',perms)
         // router.replace("/")
-         router.push({path: '/'})
-        // console.log(' router.replace("/")执行完毕')
+        //  router.push({path: '/'})
+        console.log('准备跳转')
+        await router.replace({path: '/index'})
+        // debugger
+        console.log(' router.replace("/")执行完毕')
       }else{
         ElMessage.error(data.msg)
       }
